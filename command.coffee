@@ -18,12 +18,16 @@ class Command
     commander
       .version packageJSON.version
       .option '-s, --single-run', 'perform only one job.'
+      .option '-d, --delay <30>', 'delay next run (minutes)', @parseInt, 30
       .parse process.argv
 
-    {@singleRun} = commander
+    {@singleRun,@delay} = commander
 
-    if process.env.CREDENTIALS_SINGLE_RUN?
-      @singleRun = process.env.CREDENTIALS_SINGLE_RUN == 'true'
+    if process.env.REFRESH_TOKEN_SINGLE_RUN?
+      @singleRun = process.env.REFRESH_TOKEN_SINGLE_RUN == 'true'
+
+    if process.env.REFRESH_TOKEN_DELAY?
+      @delay = @parseInt process.env.REFRESH_TOKEN_DELAY
 
     @mongoDBUri = process.env.MONGODB_URI
     @apiOctobluUri = process.env.API_OCTOBLU_URI
@@ -54,7 +58,9 @@ class Command
     worker.run (error) =>
       if error?
         console.error error.stack
-      process.nextTick callback
+      delayMs = 1000 * 60 * @delay
+      debug "waiting #{delayMs}ms"
+      _.delay callback, delayMs
 
   die: (error) =>
     return process.exit(0) unless error?

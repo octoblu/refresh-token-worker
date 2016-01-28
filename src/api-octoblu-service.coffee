@@ -18,7 +18,7 @@ class ApiOctobluService
     debug 'refreshing token with octoblu', options
     request.post options, (error, response, body) =>
       return callback error if error?
-      return callback new Error "Invalid Response #{response.statusCode} Body: #{body}" if response.statusCode > 299
+      console.error "Invalid Response #{response.statusCode} Body: #{body}" if response.statusCode > 499
       callback null
 
 module.exports = ApiOctobluService

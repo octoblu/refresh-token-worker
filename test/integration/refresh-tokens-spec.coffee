@@ -6,7 +6,7 @@ ApiOctobluService  = require '../../src/api-octoblu-service'
 
 describe 'Refresh Tokens', ->
   beforeEach ->
-    @mongoDBUri = 'credentials-test-database'
+    @mongoDBUri = 'refresh-token-test-database'
     @database = mongojs @mongoDBUri, ['users']
 
   beforeEach (done) ->

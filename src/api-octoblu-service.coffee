@@ -6,7 +6,7 @@ class ApiOctobluService
   refreshToken: ({type, userUuid}, callback) =>
     options =
       baseUrl: @apiOctobluUri
-      uri: '/api/worker/refresh-token'
+      uri: '/api/workers/refresh-token'
       auth:
         username: @meshbluConfig.uuid
         password: @meshbluConfig.token

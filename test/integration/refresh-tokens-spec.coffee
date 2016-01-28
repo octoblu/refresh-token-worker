@@ -45,7 +45,7 @@ describe 'Refresh Tokens', ->
         refreshWorkerAuth = new Buffer('refresh-worker-uuid:refresh-worker-token').toString('base64')
 
         @refreshTheToken = @apiOctoblu
-          .post '/api/worker/refresh-token'
+          .post '/api/workers/refresh-token'
           .set 'Authorization', "Basic #{refreshWorkerAuth}"
           .send
             userUuid: 'user-uuid'

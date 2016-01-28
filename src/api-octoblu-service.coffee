@@ -1,4 +1,5 @@
 request = require 'request'
+debug   = require('debug')('refresh-token-worker:api-octoblu-service')
 
 class ApiOctobluService
   constructor: ({@apiOctobluUri,@meshbluConfig}) ->
@@ -14,6 +15,7 @@ class ApiOctobluService
         type: type
         userUuid: userUuid
 
+    debug 'refreshing token with octoblu', options
     request.post options, (error, response, body) =>
       return callback error if error?
       return callback new Error "Invalid Response #{response.statusCode} Body: #{body}" if response.statusCode > 299

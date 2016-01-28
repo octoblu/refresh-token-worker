@@ -30,5 +30,12 @@
     "mocha-istanbul": "^0.2.0",
     "sinon": "^1.17.3",
     "sinon-chai": "^2.8.0"
+  },
+  "dependencies": {
+    "async": "^1.5.2",
+    "commander": "^2.9.0",
+    "lodash": "^4.0.1",
+    "meshblu-config": "^3.1.1",
+    "mongojs": "^2.3.0"
   }
 }

@@ -16,7 +16,7 @@ class ApiOctobluService
 
     request.post options, (error, response, body) =>
       return callback error if error?
-      return callback new Error "Invalid Resposne #{response.statusCode}" if response.statusCode > 299
+      return callback new Error "Invalid Response #{response.statusCode}" if response.statusCode > 299
       callback null
 
 module.exports = ApiOctobluService

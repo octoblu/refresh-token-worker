@@ -7,7 +7,7 @@ mongojs       = require 'mongojs'
 packageJSON   = require './package.json'
 
 UsersCollection    = require './src/users-collection'
-ApiOctobluService  = require './src/refresh-token-worker'
+ApiOctobluService  = require './src/api-octoblu-service'
 RefreshTokenWorker = require './src/refresh-token-worker'
 
 class Command
@@ -45,7 +45,7 @@ class Command
 
     process.on 'SIGTERM', => @terminate = true
 
-    return @queueWorkerRun {usersCollection}, @die if @singleRun
+    return @queueWorkerRun {usersCollection,apiOctobluService}, @die if @singleRun
     async.until @terminated, async.apply(@queueWorkerRun, {usersCollection,apiOctobluService}), @die
 
   terminated: => @terminate

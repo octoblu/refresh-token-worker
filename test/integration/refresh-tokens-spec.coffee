@@ -37,6 +37,35 @@ describe 'Refresh Tokens', ->
         api: [
           expiresOn: Date.now() - 1000
           type:      'channel:github'
+          validToken: true
+        ]
+      @database.users.insert user, done
+
+    describe 'when the worker runs once', ->
+      beforeEach (done) ->
+        refreshWorkerAuth = new Buffer('refresh-worker-uuid:refresh-worker-token').toString('base64')
+
+        @refreshTheToken = @apiOctoblu
+          .post '/api/workers/refresh-token'
+          .set 'Authorization', "Basic #{refreshWorkerAuth}"
+          .send
+            userUuid: 'user-uuid'
+            type:     'channel:github'
+          .reply 204
+
+        @sut.run (error) => done error
+
+      it 'should hit up api.octoblu.com', ->
+        @refreshTheToken.done()
+
+  describe 'when a user with an expired token without validToken is in the database', ->
+    beforeEach (done) ->
+      user =
+        resource:
+          uuid: 'user-uuid'
+        api: [
+          expiresOn: Date.now() - 1000
+          type:      'channel:github'
         ]
       @database.users.insert user, done
 
@@ -65,6 +94,7 @@ describe 'Refresh Tokens', ->
         api: [
           expiresOn: Date.now() + 1000
           type:      'channel:github'
+          validToken: true
         ]
       @database.users.insert user, done
 
@@ -73,7 +103,64 @@ describe 'Refresh Tokens', ->
         refreshWorkerAuth = new Buffer('refresh-worker-uuid:refresh-worker-token').toString('base64')
 
         @refreshTheToken = @apiOctoblu
-          .post '/api/worker/refresh-token'
+          .post '/api/workers/refresh-token'
+          .set 'Authorization', "Basic #{refreshWorkerAuth}"
+          .send
+            userUuid: 'user-uuid'
+            type:     'channel:github'
+          .reply 204
+
+        @sut.run (error) => done error
+
+      it 'should not hit up api.octoblu.com', ->
+        expect(@refreshTheToken.isDone).to.be.false
+
+  describe 'when a user with an invalid token is in the database', ->
+    beforeEach (done) ->
+      user =
+        resource:
+          uuid: 'user-uuid'
+        api: [
+          expiresOn: Date.now() - 1000
+          type:      'channel:github'
+          validToken: false
+        ]
+      @database.users.insert user, done
+
+    describe 'when the worker runs once', ->
+      beforeEach (done) ->
+        refreshWorkerAuth = new Buffer('refresh-worker-uuid:refresh-worker-token').toString('base64')
+
+        @refreshTheToken = @apiOctoblu
+          .post '/api/workers/refresh-token'
+          .set 'Authorization', "Basic #{refreshWorkerAuth}"
+          .send
+            userUuid: 'user-uuid'
+            type:     'channel:github'
+          .reply 204
+
+        @sut.run (error) => done error
+
+      it 'should not hit up api.octoblu.com', ->
+        expect(@refreshTheToken.isDone).to.be.false
+
+  describe 'when a user with an expired token without the validToken property is in the database', ->
+    beforeEach (done) ->
+      user =
+        resource:
+          uuid: 'user-uuid'
+        api: [
+          expiresOn: Date.now() + 1000
+          type:      'channel:github'
+        ]
+      @database.users.insert user, done
+
+    describe 'when the worker runs once', ->
+      beforeEach (done) ->
+        refreshWorkerAuth = new Buffer('refresh-worker-uuid:refresh-worker-token').toString('base64')
+
+        @refreshTheToken = @apiOctoblu
+          .post '/api/workers/refresh-token'
           .set 'Authorization', "Basic #{refreshWorkerAuth}"
           .send
             userUuid: 'user-uuid'
@@ -91,7 +178,7 @@ describe 'Refresh Tokens', ->
         refreshWorkerAuth = new Buffer('refresh-worker-uuid:refresh-worker-token').toString('base64')
 
         @refreshTheToken = @apiOctoblu
-          .post '/api/worker/refresh-token'
+          .post '/api/workers/refresh-token'
           .set 'Authorization', "Basic #{refreshWorkerAuth}"
           .send
             userUuid: 'user-uuid'

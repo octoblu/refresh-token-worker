@@ -17,11 +17,13 @@ class UsersCollection
         api = _.find user.api, (api) =>
           return false unless api.expiresOn?
           return true if moment(now).isAfter api.expiresOn
+        return if api.validToken? and api.validToken == false
         return {
           type: api.type
           userUuid: user.resource.uuid
         }
-      callback null, result
+
+      callback null, _.compact result
 
 
 module.exports = UsersCollection

@@ -1,6 +1,6 @@
 {
   "name": "@octoblu/refresh-token-worker",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Refresh tokens",
   "main": "index.js",
   "scripts": {

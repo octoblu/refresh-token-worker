@@ -24,7 +24,7 @@ describe 'Refresh Tokens', ->
     usersCollection = new UsersCollection users: @database.users
     apiOctobluService = new ApiOctobluService {apiOctobluUri: "http://localhost:#{0xd00d}", meshbluConfig}
 
-    @sut = new RefreshTokenWorker {usersCollection,apiOctobluService}
+    @sut = new RefreshTokenWorker {usersCollection,apiOctobluService,tokenDelay:1}
 
   afterEach (done) ->
     @apiOctoblu.close done

@@ -3,7 +3,7 @@ async = require 'async'
 debug = require('debug')('refresh-token-worker:worker')
 
 class RefreshTokenWorker
-  constructor: ({@usersCollection,@apiOctobluService}) ->
+  constructor: ({@usersCollection,@apiOctobluService,@tokenDelay}) ->
 
   run: (callback) =>
     debug 'running...'
@@ -11,6 +11,11 @@ class RefreshTokenWorker
       return callback error if error?
       return callback null if _.isEmpty results
       debug 'tokens to refresh', results
-      async.eachSeries results, @apiOctobluService.refreshToken, callback
+      eachItem = (item, callback) =>
+        @apiOctobluService.refreshToken item, (error) =>
+          return callback error if error?
+          _.delay callback, @tokenDelay
+
+      async.eachSeries results, eachItem, callback
 
 module.exports = RefreshTokenWorker

@@ -38,6 +38,8 @@ class Command
     return @die new Error 'Missing environment variable MONGODB_URI' if _.isEmpty @mongoDBUri
     return @die new Error 'Missing environment variable API_OCTOBLU_URI' if _.isEmpty @apiOctobluUri
 
+    console.log 'Running...'
+
     meshbluConfig = new MeshbluConfig().toJSON()
     database = mongojs @mongoDBUri, ['users']
     usersCollection = new UsersCollection users: database.users
@@ -51,9 +53,9 @@ class Command
   terminated: => @terminate
 
   queueWorkerRun: ({usersCollection,apiOctobluService,meshbluConfig}, callback) =>
-    console.log 'Running...'
+    console.log 'Running worker...'
 
-    worker = new RefreshTokenWorker {usersCollection,apiOctobluService,meshbluConfig}
+    worker = new RefreshTokenWorker {usersCollection,apiOctobluService,meshbluConfig,tokenDelay:5000}
 
     worker.run (error) =>
       if error?

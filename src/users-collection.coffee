@@ -2,21 +2,21 @@ _      = require 'lodash'
 moment = require 'moment'
 
 class UsersCollection
-  constructor: ({@users}) ->
+  constructor: ({@users, @delay}) ->
 
   findExpiredTokens: (callback) =>
-    now = Date.now()
+    nextRun = Date.now() + (@delay * 1000 * 60)
     query =
       api:
         $elemMatch:
           expiresOn:
-            $lt: now
+            $lt: nextRun
     @users.find query, (error, users) =>
       return callback error if error?
       result = _.map users, (user) =>
         api = _.find user.api, (api) =>
           return false unless api.expiresOn?
-          return true if moment(now).isAfter api.expiresOn
+          return true if moment(nextRun).isAfter api.expiresOn
         return if api.validToken? and api.validToken == false
         return {
           type: api.type

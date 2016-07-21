@@ -3,6 +3,7 @@ mongojs     = require 'mongojs'
 RefreshTokenWorker = require '../../src/refresh-token-worker'
 UsersCollection    = require '../../src/users-collection'
 ApiOctobluService  = require '../../src/api-octoblu-service'
+enableDestroy = require 'server-destroy'
 
 describe 'Refresh Tokens', ->
   beforeEach ->
@@ -14,6 +15,7 @@ describe 'Refresh Tokens', ->
 
   beforeEach ->
     @apiOctoblu = shmock 0xd00d
+    enableDestroy @apiOctoblu
 
     meshbluConfig =
       uuid: 'refresh-worker-uuid'
@@ -21,13 +23,13 @@ describe 'Refresh Tokens', ->
       server: 'localhost'
       port: 0xd00d
 
-    usersCollection = new UsersCollection users: @database.users
+    usersCollection = new UsersCollection users: @database.users, delay: 1
     apiOctobluService = new ApiOctobluService {apiOctobluUri: "http://localhost:#{0xd00d}", meshbluConfig}
 
     @sut = new RefreshTokenWorker {usersCollection,apiOctobluService,tokenDelay:1}
 
   afterEach (done) ->
-    @apiOctoblu.close done
+    @apiOctoblu.destroy done
 
   describe 'when a user with an expired token is in the database', ->
     beforeEach (done) ->
@@ -92,7 +94,7 @@ describe 'Refresh Tokens', ->
         resource:
           uuid: 'user-uuid'
         api: [
-          expiresOn: Date.now() + 1000
+          expiresOn: Date.now() + (2 * 60 * 1000)
           type:      'channel:github'
           validToken: true
         ]
@@ -144,13 +146,13 @@ describe 'Refresh Tokens', ->
       it 'should not hit up api.octoblu.com', ->
         expect(@refreshTheToken.isDone).to.be.false
 
-  describe 'when a user with an expired token without the validToken property is in the database', ->
+  describe 'when a user with a valid token without the validToken property is in the database', ->
     beforeEach (done) ->
       user =
         resource:
           uuid: 'user-uuid'
         api: [
-          expiresOn: Date.now() + 1000
+          expiresOn: Date.now() + (2 * 1000 * 60)
           type:      'channel:github'
         ]
       @database.users.insert user, done

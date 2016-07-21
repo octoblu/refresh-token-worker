@@ -42,7 +42,7 @@ class Command
 
     meshbluConfig = new MeshbluConfig().toJSON()
     database = mongojs @mongoDBUri, ['users']
-    usersCollection = new UsersCollection users: database.users
+    usersCollection = new UsersCollection users: database.users, delay: @delay
     apiOctobluService = new ApiOctobluService {@apiOctobluUri,meshbluConfig}
 
     process.on 'SIGTERM', => @terminate = true

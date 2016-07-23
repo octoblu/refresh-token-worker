@@ -5,7 +5,7 @@ class UsersCollection
   constructor: ({@users, @delay}) ->
 
   findExpiredTokens: (callback) =>
-    nextRun = Date.now() + (@delay * 1000 * 60)
+    nextRun = Date.now() + (@delay * 1000 * 60) + (2000 * 60)
     query =
       api:
         $elemMatch:

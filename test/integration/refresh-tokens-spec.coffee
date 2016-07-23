@@ -94,7 +94,7 @@ describe 'Refresh Tokens', ->
         resource:
           uuid: 'user-uuid'
         api: [
-          expiresOn: Date.now() + (2 * 60 * 1000)
+          expiresOn: Date.now() + (4 * 60 * 1000)
           type:      'channel:github'
           validToken: true
         ]
@@ -152,7 +152,7 @@ describe 'Refresh Tokens', ->
         resource:
           uuid: 'user-uuid'
         api: [
-          expiresOn: Date.now() + (2 * 1000 * 60)
+          expiresOn: Date.now() + (4 * 1000 * 60)
           type:      'channel:github'
         ]
       @database.users.insert user, done

@@ -13,7 +13,7 @@ class RefreshTokenWorker
       debug 'tokens to refresh', results
       eachItem = (item, callback) =>
         @apiOctobluService.refreshToken item, (error) =>
-          return callback error if error?
+          console.error error.stack if error?
           _.delay callback, @tokenDelay
 
       async.eachSeries results, eachItem, callback

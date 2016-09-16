@@ -3,15 +3,5 @@ node_js:
 - '5'
 services:
 - mongodb
-before_script:
-- npm install -g codeclimate-test-reporter
-after_script:
-- codeclimate-test-reporter < coverage/lcov.info
-deploy:
-  provider: npm
-  email: serveradmin@octoblu.com
-  api_key:
-    secure: ZbS6AXq95ttwOn2FTLPzsIUr3wWmvUgIr67BpkpX246ph80EnqV8VvYbvJ8X/OUgIog/xnUnY3tL/iR7/5kM82fkNC7UCn6jYMdW/gvckxKOG0O3P+ODtUpjM9Hdjzt39nZZSl4HV3luifWBT/ly4NpXk56zCUTBWLRILoCI+SUHSQ/F/GfQygfp/GKEycrjWKOl22wvkAgtOtMG8t6zSjb4Gih+9dNTiZNwnm79fdm9bk3317ASKqQZ15/dkmbMtb8Jc8lShgz31N8n0aLBu7d55dyXQaCdO/Hp+ar5q6j/uGrM+ThedAyVbWS+8w9psux8eGvipAgbAz83UwEX3y+zlUOuZx7yImI3uf2VgVASha4rm0IzDV7oBAT8Sv9nqZSGcZw1aoHKUrRC7vKIHT3+gcnXBWysQcb0aWyXGnL0J1MUe/WYslw72r3PeeKW6yOufjFSuwerhZC6MAWd2HSfCaoMfeUItye/kA8tfEWMXCt+ta3EJNFm7v8snoEkq/IjGXfLN6LfzJtXepZY60Bqhym/463sN5h2TneSmLphJmIXW+YdTBQAYd1ek4v92SlnFHxPWtSOlPXrjrIxTHUlAiu1NC/zVI3098ZPJuR+1KYRzyzwNkAdahcD4fVZn6wEMLYHBqYbMuE3ShDLWtkSYnOZtDwgJtz2xk2lAYE=
-  on:
-    tags: true
-    branches: true
+after_success:
+  - bash <(curl -s https://codecov.io/bash) -t 5ba57bc4-1f46-4725-9630-027fc6babd3c

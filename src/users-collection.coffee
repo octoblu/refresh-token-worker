@@ -6,11 +6,13 @@ class UsersCollection
 
   findExpiredTokens: (callback) =>
     nextRun = Date.now() + (@delay * 1000 * 60) + (2000 * 60)
+    prevRun = Date.now() - ((@delay * 1000 * 60) * 2)
     query =
       api:
         $elemMatch:
           expiresOn:
             $lt: nextRun
+            $gt: prevRun
     @users.find query, (error, users) =>
       return callback error if error?
       result = _.map users, (user) =>

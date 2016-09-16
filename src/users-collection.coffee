@@ -14,7 +14,7 @@ class UsersCollection
           expiresOn:
             $lt: nextRun
             $gt: prevRun
-    debug 'Query: ' JSON.stringify(query, null, 2)
+    debug 'Query: ', JSON.stringify(query, null, 2)
     @users.find query, (error, users) =>
       return callback error if error?
       result = _.map users, (user) =>

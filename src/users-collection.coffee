@@ -14,13 +14,13 @@ class UsersCollection
           expiresOn:
             $lt: nextRun
             $gt: prevRun
-    debug {query}
+    debug 'Query: ' JSON.stringify(query, null, 2)
     @users.find query, (error, users) =>
       return callback error if error?
       result = _.map users, (user) =>
         apis = _.filter user.api, (api) =>
           return false unless api.expiresOn?
-          debug {api}
+          debug 'API: ', JSON.stringify(api, null, 2)
           return false if moment(api.expiresOn).isBefore prevRun
           return true if moment(nextRun).isAfter api.expiresOn
         return _.map apis, (api) =>

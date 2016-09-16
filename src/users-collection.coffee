@@ -18,19 +18,19 @@ class UsersCollection
     @users.find query, (error, users) =>
       return callback error if error?
       result = _.map users, (user) =>
-        api = _.find user.api, (api) =>
+        apis = _.filter user.api, (api) =>
           return false unless api.expiresOn?
           debug {api}
           return false if moment(api.expiresOn).isBefore prevRun
           return true if moment(nextRun).isAfter api.expiresOn
-        return unless api?
-        return if api.validToken? and api.validToken == false
-        return {
-          type: api.type
-          userUuid: user.resource.uuid
-        }
+        return _.map apis, (api) =>
+          return if api.validToken? and api.validToken == false
+          return {
+            type: api.type
+            userUuid: user.resource.uuid
+          }
 
-      callback null, _.compact result
+      callback null, _.compact _.flatten result
 
 
 module.exports = UsersCollection

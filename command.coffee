@@ -18,7 +18,7 @@ class Command
     commander
       .version packageJSON.version
       .option '-s, --single-run', 'perform only one job.'
-      .option '-d, --delay <15>', 'delay next run (minutes)', @parseInt, 15
+      .option '-d, --delay <5>', 'delay next run (minutes)', @parseInt, 5
       .parse process.argv
 
     {@singleRun,@delay} = commander

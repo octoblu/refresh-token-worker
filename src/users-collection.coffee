@@ -1,5 +1,6 @@
 _      = require 'lodash'
 moment = require 'moment'
+debug = require('debug')('refresh-token-worker:users-collection')
 
 class UsersCollection
   constructor: ({@users, @delay}) ->
@@ -13,12 +14,16 @@ class UsersCollection
           expiresOn:
             $lt: nextRun
             $gt: prevRun
+    debug {query}
     @users.find query, (error, users) =>
       return callback error if error?
       result = _.map users, (user) =>
         api = _.find user.api, (api) =>
           return false unless api.expiresOn?
+          debug {api}
+          return false if moment(api.expiresOn).isBefore prevRun
           return true if moment(nextRun).isAfter api.expiresOn
+        return unless api?
         return if api.validToken? and api.validToken == false
         return {
           type: api.type

@@ -9,5 +9,5 @@ services:
 after_success:
 - npm run coverage
 - npm run mocha:json
-- bash <(curl -s https://codecov.io/bash)
+- bash <(curl -s https://codecov.io/bash) -t 5ba57bc4-1f46-4725-9630-027fc6babd3c
 - bash <(curl -s https://codecov.octoblu.com/bash)

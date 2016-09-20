@@ -4,7 +4,10 @@
   "description": "Refresh tokens",
   "main": "index.js",
   "scripts": {
-    "test": "istanbul cover _mocha -- -R spec --require coffee-coverage/register-istanbul && mocha --reporter json > coverage/mocha.json"
+    "test": "mocha",
+    "coverage": "nyc npm test",
+    "mocha:json": "env NPM_ENV=test mocha --reporter json > coverage/mocha.json",
+    "test:watch": "mocha -w -R mocha-multi --reporter-options spec=-,mocha-osx-reporter=-"
   },
   "repository": {
     "type": "git",
@@ -23,10 +26,10 @@
   "homepage": "https://github.com/octoblu/refresh-token-worker#readme",
   "devDependencies": {
     "chai": "^3.5.0",
-    "coffee-coverage": "^1.0.1",
-    "istanbul": "^0.4.5",
     "mocha": "^3.0.2",
-    "mocha-istanbul": "^0.3.0",
+    "mocha-multi": "^0.9.1",
+    "mocha-osx-reporter": "^0.1.2",
+    "nyc": "^8.3.0",
     "server-destroy": "^1.0.1",
     "sinon": "^1.17.5",
     "sinon-chai": "^2.8.0"
@@ -41,5 +44,16 @@
     "moment": "^2.15.0",
     "mongojs": "^2.3.0",
     "request": "^2.74.0"
+  },
+  "nyc": {
+    "cache": true,
+    "reporter": [
+      "text-summary",
+      "lcov",
+      "json"
+    ],
+    "extension": [
+      ".coffee"
+    ]
   }
 }

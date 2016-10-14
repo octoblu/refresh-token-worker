@@ -1,13 +1,19 @@
 language: node_js
 node_js:
-- '5'
+  - '5'
 branches:
   only:
-  - "/^v[0-9]/"
+    - '/^v[0-9]/'
 services:
-- mongodb
+  - mongodb
 after_success:
-- npm run coverage
-- npm run mocha:json
-- bash <(curl -s https://codecov.io/bash) -t 5ba57bc4-1f46-4725-9630-027fc6babd3c
-- bash <(curl -s https://codecov.octoblu.com/bash)
+  - >-
+    bash <(curl -s https://codecov.io/bash) -t
+    5ba57bc4-1f46-4725-9630-027fc6babd3c
+  - npm run coverage
+  - 'npm run mocha:json'
+  - 'bash <(curl -s https://codecov.io/bash)'
+  - 'bash <(curl -s https://codecov.octoblu.com/bash)'
+notifications:
+  webhooks:
+    - 'https://beekeeper.octoblu.com/webhooks/travis:ci'
